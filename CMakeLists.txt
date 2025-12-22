@@ -3,15 +3,20 @@ project(Codeforces)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# 1. Search for all 'sol.cpp' files in any subdirectory (or solution.cpp in your case)
-file(GLOB_RECURSE PROBLEM_FILES RELATIVE ${CMAKE_SOURCE_DIR} "*/solution.cpp")
-# NOTE: If your file is named sol.cpp, change "*/solution.cpp" to "*/sol.cpp"
+# Search for all 'solution.cpp' files
+file(GLOB_RECURSE PROBLEM_FILES
+        RELATIVE ${CMAKE_SOURCE_DIR}
+        "*/solution.cpp")
 
-# 2. Loop through each file found and create an executable
+# Loop through each file found
 foreach(FILE_PATH ${PROBLEM_FILES})
-    # Get the folder name (e.g., "2173A") to use as target name
-    get_filename_component(PROBLEM_NAME ${FILE_PATH} DIRECTORY)
+    # Get the directory path (e.g., "1068/2173A")
+    get_filename_component(DIR_PATH ${FILE_PATH} DIRECTORY)
 
-    # Create executable
-    add_executable(${PROBLEM_NAME} ${FILE_PATH})
+    # Replace all '/' with '_' to create a valid target name
+    # "1068/2173A" -> "1068_2173A"
+    string(REPLACE "/" "_" TARGET_NAME "${DIR_PATH}")
+
+    # Create executable using the sanitized name
+    add_executable(${TARGET_NAME} ${FILE_PATH})
 endforeach()
